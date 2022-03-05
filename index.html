@@ -12,11 +12,21 @@
         </div>
     </nav>
     <div class="container mx-5 my-5">
+        <div class="col">
         <div class="row">
-            <div class="col">
                 <div class="mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="subjectSelect" class="form-label">Subject</label>
+                            <select onchange="search();" id="subjectSelect" class="form-select" aria-label="Select subject">
+                                <option selected value="any">Any</option>
+                            </select>
+                        </div>
+                        <div class="col">
                     <label for="search" class="form-label">Search query</label>
-                    <input autocomplete="off" type="text" class="form-control" id="search" onkeyup="searchFilter()">
+                    <input autocomplete="off" type="text" class="form-control" id="search" onkeyup="search()">
+                        </div>
+                    </div>
                     <table class="table" id="courseTable">
                         <thead>
                             <tr>
@@ -31,12 +41,16 @@
                             $( document ).ready(function() {
                                 console.log("ready");
                                 var table = $("#tableBody");
+                                var subjects = $("#subjectSelect");
 
                                 $.getJSON("./course_catalog.json", function( data ) {
                                     for (var subject in data) {
+                                        subjects.append('<option value="' + subject + '">' + subject + '</option>');
+
                                         for (var course in data[subject]) {
                                             var c = data[subject][course];
-                                            var row = '<tr><th scope="row" class="courseNumber">';
+                                            var row = '<tr data-subject="' + subject + '">';
+                                            row += '<th scope="row" class="courseNumber">';
                                             row += subject + c.number;
                                             row += '</th>';
                                             row += '<td class="courseTitle">';
@@ -52,23 +66,34 @@
                                 });
                             });
 
-                            function searchFilter() {
+                            function subjectFilter() {
+                                var subject = $("#subjectSelect");
+                            }
+
+                            function search() {
                                 var input, filter, table, tr, x;
                                 input = document.getElementById("search");
                                 filter = input.value.toLowerCase();
                                 table = document.getElementById("courseTable");
                                 tr = table.getElementsByTagName("tr");
 
+                                var subject = $("#subjectSelect").val();
+                                console.log("subject: " + subject);
+
                                 for (x = 0; x < tr.length; x++) {
-                                    var title, num;
-                                    title = tr[x].getElementsByClassName("courseTitle")[0];
-                                    num = tr[x].getElementsByClassName("courseNumber")[0];
+                                    var row, title, num;
+                                    row = tr[x];
+                                    title = row.getElementsByClassName("courseTitle")[0];
+                                    num = row.getElementsByClassName("courseNumber")[0];
 
                                     if (title || num) {
-                                        if ((title.innerHTML.toLowerCase().indexOf(filter) > -1) || (num.innerHTML.toLowerCase().indexOf(filter) > -1)) {
-                                            tr[x].style.display = "";
+                                        if (
+                                            ((title.innerHTML.toLowerCase().indexOf(filter) > -1) || (num.innerHTML.toLowerCase().indexOf(filter) > -1))
+                                            && (row.dataset.subject == subject || subject == "any")
+                                        ) {
+                                            row.style.display = "";
                                         } else {
-                                            tr[x].style.display = "none";
+                                            row.style.display = "none";
                                         }
                                     }
                                 }
