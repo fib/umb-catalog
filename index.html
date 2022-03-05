@@ -84,7 +84,7 @@ function subjectFilter() {
 function search() {
     var input, filter, table, tr, x;
     input = document.getElementById("search");
-    filter = input.value.toLowerCase();
+    filter = input.value.toLowerCase().split(' ');
     table = document.getElementById("courseTable");
     tr = table.getElementsByTagName("tr");
 
@@ -97,9 +97,13 @@ function search() {
         title = row.getElementsByClassName("courseTitle")[0];
         num = row.getElementsByClassName("courseNumber")[0];
 
+
         if (title || num) {
+            title = title.innerHTML.toLowerCase();
+            num = num.innerHTML.toLowerCase();
             if (
-                ((title.innerHTML.toLowerCase().indexOf(filter) > -1) || (num.innerHTML.toLowerCase().indexOf(filter) > -1))
+                (filter.every(v => title.includes(v)) || filter.every(v => num.includes(v)))
+                /*((title.indexOf(filter) > -1) || (num.indexOf(filter) > -1))*/
                 && (row.dataset.subject == subject || subject == "any")
             ) {
                 row.style.display = "";
