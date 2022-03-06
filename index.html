@@ -31,21 +31,21 @@
             </div>
         </div>
     </nav>
-    <div class="container mx-5 my-5">
-        <div class="row">
-            <div class="mb-3">
+    <div class="container py-5 px-5">
+        <div class="row mb-3">
                 <div class="alert alert-warning" role="alert"><i class="bi bi-exclamation-triangle"></i> Some
                     classes may be missing, this is a work in progress.</div>
-                <div class="col-2">
+                <div class="col-sm-2">
                     <label for="subjectSelect" class="form-label">Subject</label>
                     <select onchange="search();" id="subjectSelect" class="form-select" aria-label="Select subject">
                         <option selected value="any">Any</option>
                     </select>
                 </div>
 
+                <div class="col-sm">
                 <label for="search" class="form-label">Search query</label>
                 <input autocomplete="off" type="text" class="form-control" id="search" onkeyup="search()">
-            </div>
+                </div>
         </div>
         <div class="row">
             <div class="table-responsive">
