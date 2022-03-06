@@ -11,13 +11,13 @@ $(document).ready(function () {
                 var c = data[subject][course];
                 var row = '<tr data-subject="' + subject + '">';
                 row += '<th scope="row" class="courseNumber">';
-                row += subject + c.number;
+                row += subject + c.n;
                 row += '</th>';
                 row += '<td class="courseTitle">';
-                row += c.title;
+                row += c.t;
                 row += '</td>';
                 row += '<td class="courseCredits">';
-                row += c.credits;
+                row += c.c;
                 row += '</td></tr>';
 
                 table.append(row);
