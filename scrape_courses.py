@@ -16,9 +16,9 @@ import pprint
 
 @dataclass
 class Class:
-    number: str
-    title: str
-    credits: int
+    n: str  # number
+    t: str  # title
+    c: int  # credits
 
 
 subjects = [
@@ -86,7 +86,6 @@ subjects = [
     "PHYSIC",
     "POLSCI",
     "PORT",
-    "CAS",
     "PSYCH",
     "RUSS",
     "SOCIOL",
@@ -101,40 +100,52 @@ subjects = [
     "WGS",
 ]
 
-class_url_pattern = "https://www.umb.edu/course_catalog/courses/ugrd_{}_2022%20Spring"
+course_listings_url = "https://www.umb.edu/course_catalog/courses/ugrd_{subject}_all"
+course_info_url = "https://www.umb.edu/course_catalog/course_info/ugrd_{subject}_all_{number}"
 
-classes = {}
+courses = {}
 
 
 for subject in subjects:
-    s = r.get(class_url_pattern.format(subject)).text
+    s = r.get(course_listings_url.format(subject=subject)).text
 
-    subject_classes = BeautifulSoup(s, features="html.parser").find_all("a")
+    subject_courses = BeautifulSoup(s, features="html.parser").find("ul", {"class": "showHideList"}).find_all("li")
 
-    c = []
+    # current subject being processed
+    subject_list = []
 
-    for i in subject_classes:
-        if a := re.findall(r"^{} \d{{3}}".format(subject), i.text):
+    for course in subject_courses:
+        if h := course.find("h4"):
+            course_number = h.text.split("\xa0\xa0")[0].rsplit(' ')[1]
+            course_title = h.text.split("\xa0\xa0")[1].replace(" + ", "")
 
-            credits_page = r.get(i["href"]).text
-            credits = BeautifulSoup(credits_page, features="html.parser")
-            credits = credits.find_all("span", {"class": "class-div-info"})[5]
+            course_page = r.get(course_info_url.format(subject=subject, number=course_number)).text
 
-            c.append(
+            # attempting retrieving the course credits
+            try:
+                course_credits = BeautifulSoup(course_page, features="html.parser")
+                course_credits = course_credits.find_all("span", {"class": "class-div-info"})[5]
+                course_credits = course_credits.contents[0][0]
+            except:
+                course_credits = "N/A"
+
+            print(f"{subject}{course_number}\t\t({course_credits})\t\t{course_title}")
+
+            subject_list.append(
                 asdict(
                     Class(
-                        a[0].split(" ")[1],
-                        i.contents[0].rsplit("\xa0")[-1],
-                        int(credits.contents[0][0]),
+                        course_number,
+                        course_title,
+                        course_credits,
                     )
                 )
             )
 
-    classes[subject] = c
+    courses[subject] = subject_list
     print(f"{subject} done")
 
 
-pprint.pp(classes)
+pprint.pp(courses)
 
 with open("./course_catalog.json", "w") as f:
-    json.dump(classes, f)
+    json.dump(courses, f)
