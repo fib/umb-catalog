@@ -11,6 +11,8 @@ $(document).ready(function () {
                 var c = data[subject][course];
                 var row = '<tr data-subject="' + subject + '">';
                 row += '<th scope="row" class="courseNumber">';
+                row += '<a class="link-dark" href="https://www.umb.edu/course_catalog/course_info/ugrd_' + subject + '_all_' + c.n + '">';
+                row += '<i class="bi bi-link-45deg"></i></a> ';
                 row += subject + c.n;
                 row += '</th>';
                 row += '<td class="courseTitle">';
