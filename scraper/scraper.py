@@ -49,7 +49,7 @@ for subject in subjects:
 
             course_page = r.get(course_info_url.format(subject=subject, number=course_number)).text
 
-            # attempting retrieving the course credits
+            # attempting to retrieve the course credits
             try:
                 course_credits = BeautifulSoup(course_page, features="html.parser")
                 course_credits = course_credits.find_all("span", {"class": "class-div-info"})[5]
@@ -75,5 +75,5 @@ for subject in subjects:
 
 pprint.pp(courses)
 
-with open("./course_catalog.json", "w") as f:
+with open("../course_catalog.json", "w") as f:
     json.dump(courses, f)
