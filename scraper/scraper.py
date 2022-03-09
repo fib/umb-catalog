@@ -21,89 +21,17 @@ class Class:
     c: int  # credits
 
 
-subjects = [
-    "AF",
-    "AFRSTY",
-    "AMST",
-    "ANTH",
-    "ARABIC",
-    "ART",
-    "ASAMST",
-    "ASIAN",
-    "ASP",
-    "BIOCHM",
-    "BIOL",
-    "BC",
-    "CAPS",
-    "CHEM",
-    "CHINSE",
-    "CINE",
-    "CLSICS",
-    "COMM",
-    "CS",
-    "COUNSL",
-    "CSP",
-    "CRW",
-    "DANCE",
-    "ECHD",
-    "ECON",
-    "EDC U",
-    "ENGIN",
-    "ENGL",
-    "ESL",
-    "ENVSCI",
-    "ENVSTY",
-    "EHS",
-    "FRENCH",
-    "SEMINR",
-    "GERMAN",
-    "GERON",
-    "GLBAFF",
-    "GREEK",
-    "HLTH",
-    "HIST",
-    "HONORS",
-    "HUMCTR",
-    "HUMAN",
-    "IT",
-    "INTR-D",
-    "ITAL",
-    "JAPAN",
-    "LABOR",
-    "LATIN",
-    "LATAM",
-    "MGT",
-    "MSIS",
-    "MKT",
-    "MATH",
-    "IT",
-    "MLLC",
-    "MUSIC",
-    "NAIS",
-    "NURSNG",
-    "PHIL",
-    "PHILLAW",
-    "PHYSIC",
-    "POLSCI",
-    "PORT",
-    "PSYCH",
-    "RUSS",
-    "SOCIOL",
-    "SPAN",
-    "SL",
-    "RELSTY",
-    "SCSM",
-    "THRART",
-    "USEA",
-    "UPCD",
-    "VIET",
-    "WGS",
-]
-
+subject_listings_url = "https://www.umb.edu/course_catalog/listing/ugrd"
 course_listings_url = "https://www.umb.edu/course_catalog/courses/ugrd_{subject}_all"
 course_info_url = "https://www.umb.edu/course_catalog/course_info/ugrd_{subject}_all_{number}"
 
 courses = {}
+
+subjects_page = r.get(subject_listings_url).text
+subjects = BeautifulSoup(subjects_page, 'html.parser').find('div', {'id': 'content'}).find_all('li')
+subjects = [ s.text.split(' |')[0].strip() for s in subjects ]
+
+print(f"{len(subjects)} subjects found ({subjects})")
 
 
 for subject in subjects:
