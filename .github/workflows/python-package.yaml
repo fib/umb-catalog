@@ -3,7 +3,9 @@
 name: Python package
 
 on:
-  push
+  push:
+    branches:
+      - "*"
   pull_request:
     types: [opened, synchronize, reopened]
 
