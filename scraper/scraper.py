@@ -5,7 +5,6 @@
 # a good starting point, which can then be corrected manually.
 
 from dataclasses import dataclass, asdict
-import re
 
 from bs4 import BeautifulSoup
 import requests as r
@@ -29,7 +28,7 @@ courses = {}
 
 subjects_page = r.get(subject_listings_url).text
 subjects = BeautifulSoup(subjects_page, 'html.parser').find('div', {'id': 'content'}).find_all('li')
-subjects = [ s.text.split(' |')[0].strip() for s in subjects ]
+subjects = [s.text.split(' |')[0].strip() for s in subjects]
 
 print(f"{len(subjects)} subjects found ({subjects})")
 
@@ -54,7 +53,7 @@ for subject in subjects:
                 course_credits = BeautifulSoup(course_page, features="html.parser")
                 course_credits = course_credits.find_all("span", {"class": "class-div-info"})[5]
                 course_credits = course_credits.contents[0][0]
-            except:
+            except Exception:
                 course_credits = "N/A"
 
             print(f"{subject}{course_number}\t\t({course_credits})\t\t{course_title}")
